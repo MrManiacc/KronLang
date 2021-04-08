@@ -4,6 +4,7 @@ import com.kron.parse.logic.operands.NoOp
 import com.kron.parse.logic.operands.NumberOp
 import com.kron.parse.logic.operands.Operation
 import com.kron.parse.logic.operators.BinaryOp
+import com.kron.parse.logic.operators.UnaryOp
 import com.kron.token.Lexer
 import com.kron.token.Token
 import com.kron.token.TokenType
@@ -26,16 +27,28 @@ class Parser(private val lexer: Lexer) {
     /** factor : INTEGER | LPAREN expr RPAREN **/
     private fun factor(): Operation {
         val token = peekNextToken()
-        if (token.type == TokenNumber) {
-            eat(TokenNumber)
-            return NumberOp(token)
-        } else if (token.type == TokenOpenAngleBracket) {
-            eat(TokenOpenAngleBracket)
-            val node = this.expression()
-            eat(TokenCloseAngleBracket)
-            return node
+        println(token)
+        when (token.type) {
+            TokenPlus -> {
+                eat(TokenPlus)
+                return UnaryOp(token, this.factor())
+            }
+            TokenMinus -> {
+                eat(TokenMinus)
+                return UnaryOp(token, this.factor())
+            }
+            TokenNumber -> {
+                eat(TokenNumber)
+                return NumberOp(token)
+            }
+            TokenOpenParenthesis -> {
+                eat(TokenOpenParenthesis)
+                val node = this.expression()
+                eat(TokenCloseParenthesis)
+                return node
+            }
+            else -> return NoOp()
         }
-        return NoOp()
     }
 
     /**term : factor ((MUL | DIV) factor)**/

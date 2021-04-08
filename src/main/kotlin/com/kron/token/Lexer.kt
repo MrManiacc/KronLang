@@ -94,7 +94,7 @@ class Lexer private constructor() {
             }
         }
         if (type == TokenType.TokenNone) {
-            return null;
+            return null
         }
         return Token(type, index, lengthRead)
     }
@@ -103,10 +103,10 @@ class Lexer private constructor() {
      * This will peek at the next char. This should be checked to make sure it's not the last index
      * [distance] the distance away
      */
-    fun peekSafe(distance: Int = 1): Char? {
+    fun peekSafe(distance: Int = 0): Char? {
         return try {
             peek(distance)
-        } catch (ex: KronException) {
+        } catch (ex: Exception) {
             warn("${ex.message}")
             null
         }
@@ -116,19 +116,16 @@ class Lexer private constructor() {
      * This will attempt to find the char at the given [distance] away from the current index. This will not increment
      * the index as we're just peeking.
      */
-    @Throws(KronException::class) fun peek(distance: Int = 1): Char {
-        if (distance < 1) General.throws("Must supply distance greater or equal to 1 for peek!")
-        val i = index + distance
-        if (i - 1 >= size)
-            IndexOutOfBounds.throws("$i", "$size", "Lexer content's CharArray")
-        return contents[i - 1]
+    @Throws(KronException::class) fun peek(distance: Int = 0): Char {
+        val i = (index + distance) - 1
+        return contents[i]
     }
 
     /**
      * This will check to see if the given string matches the lexer state
      */
     fun checkMatch(string: String, start: Int = this.index): Boolean {
-        val stop = start + string.length
+        val stop = start + string.length - 1
         if (stop >= size) return false
         val read = readRaw(start until stop)
         return (string == read)
