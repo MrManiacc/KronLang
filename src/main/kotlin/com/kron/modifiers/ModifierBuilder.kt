@@ -1,4 +1,4 @@
-package com.kron.node.mods
+package com.kron.modifiers
 
 /**Used for creating modifiers**/
 class ModifierBuilder(private val initialValue: Int = 0) {

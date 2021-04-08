@@ -1,7 +1,7 @@
 package com.kron.token.logic.resolvers
 
-import com.kron.isNotNumber
-import com.kron.isNumber
+import com.kron.utils.isNotNumber
+import com.kron.utils.isNumber
 import com.kron.token.Lexer
 import com.kron.token.Token
 import com.kron.token.logic.IMatchingResolver

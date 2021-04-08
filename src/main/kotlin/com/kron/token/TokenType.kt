@@ -51,6 +51,10 @@ enum class TokenType(
         {
             if (it.checkMatch("*")) 1 else 0
         }),
+    TokenDivide(
+        {
+            if (it.checkMatch("/")) 1 else 0
+        }),
     TokenPlus(
         {
             if (it.checkMatch("+")) 1 else 0

@@ -1,9 +1,14 @@
 package com.kron.parse
 
-import com.kron.node.Node
+import com.kron.parse.logic.operands.NoOp
+import com.kron.parse.logic.operands.NumberOp
+import com.kron.parse.logic.operands.Operation
+import com.kron.parse.logic.operators.BinaryOp
 import com.kron.token.Lexer
 import com.kron.token.Token
 import com.kron.token.TokenType
+import com.kron.token.TokenType.*
+import java.lang.Exception
 
 /**
  * This will take the lexer and and parse the stack of [Token]
@@ -14,21 +19,74 @@ class Parser(private val lexer: Lexer) {
      * This will parse the lexer data
      */
     fun parse() {
-        val variable = parseVariable()
+        val expression = this.expression()
+        println(expression)
+    }
 
+    /** factor : INTEGER | LPAREN expr RPAREN **/
+    private fun factor(): Operation {
+        val token = peekNextToken()
+        if (token.type == TokenNumber) {
+            eat(TokenNumber)
+            return NumberOp(token)
+        } else if (token.type == TokenOpenAngleBracket) {
+            eat(TokenOpenAngleBracket)
+            val node = this.expression()
+            eat(TokenCloseAngleBracket)
+            return node
+        }
+        return NoOp()
+    }
+
+    /**term : factor ((MUL | DIV) factor)**/
+    private fun term(): Operation {
+        var node = factor()
+        if (peekNextToken().type == TokenMultiply) {
+            eat(TokenMultiply)
+            node = BinaryOp(node, factor(), TokenMultiply)
+        } else if (peekNextToken().type == TokenDivide) {
+            eat(TokenDivide)
+            node = BinaryOp(node, factor(), TokenDivide)
+        }
+        return node
     }
 
     /**
-     * This will parse the statements
+     *  expr   : term ((PLUS | MINUS) term)
+     *  term   : factor ((MUL | DIV) factor)
+     *  factor : INTEGER | LPAREN expr RPAREN
      */
-    private fun parseVariable(): Node {
-        val keyToken = findToken(TokenType.TokenVal)
-        val id = nextToken(keyToken)
-
+    private fun expression(): Operation {
+        var node = term()
+        if (peekNextToken().type == TokenPlus) {
+            eat(TokenPlus)
+            node = BinaryOp(node, factor(), TokenPlus)
+        } else if (peekNextToken().type == TokenMinus) {
+            eat(TokenMinus)
+            node = BinaryOp(node, factor(), TokenMinus)
+        }
+        return node
     }
 
-    private fun parseExpression(): Node {
+    /**
+     * This will attempt to eat the current token if  it's the given type
+     */
+    private fun eat(tokenType: TokenType) {
+        if (peekNextToken().type == tokenType)
+            lexer.tokens.pop()
+        else
+            error("Current token invalid for type ${tokenType.name}")
+    }
 
+    /**
+     * This will peek the next tokens
+     */
+    private fun peekNextToken(): Token {
+        return try {
+            lexer.tokens.peek()
+        } catch (ex: Exception) {
+            Token.EMPTY
+        }
     }
 
     /**

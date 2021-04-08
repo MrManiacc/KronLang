@@ -1,4 +1,4 @@
-package com.kron.node.mods
+package com.kron.modifiers
 
 import java.lang.StringBuilder
 

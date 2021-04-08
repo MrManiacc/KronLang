@@ -1,4 +1,4 @@
-package com.kron.node.mods
+package com.kron.modifiers
 
 /**
  * This is used to keep track of the visibility of nodes

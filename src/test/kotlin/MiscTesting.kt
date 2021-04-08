@@ -1,4 +1,4 @@
-import com.kron.node.mods.Modifier.*
+import com.kron.modifiers.Modifier.*
 import com.kron.parse.Parser
 import com.kron.source.SourceData
 import com.kron.token.Lexer
@@ -16,7 +16,7 @@ class MiscTesting {
 
     @Test
     fun `testing the parser's variable paring stuff`() {
-        val source = SourceData.fromResource("test0.kron").source
+        val source = SourceData.fromResource("test1.kron").source
         val lexer = Lexer.of { source }
         lexer.tokenize()
         val parser = Parser(lexer)
