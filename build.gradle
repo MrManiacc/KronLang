@@ -1,0 +1,54 @@
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "1.4.32"
+}
+group 'com.kron'
+/**Make this a string so we can pass it to subp rojcets**/
+
+version "1.0.0"
+
+sourceSets {
+    main {
+        resources {
+            srcDirs += "src/main/kron"
+        }
+    }
+    test {
+        resources {
+            srcDirs += "src/main/kron"
+        }
+    }
+}
+
+
+repositories {
+    mavenCentral()
+    maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+}
+
+dependencies {
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib'
+    implementation group: 'commons-io', name: 'commons-io', version: '2.8.0'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+    implementation 'io.github.microutils:kotlin-logging-jvm:2.0.6'
+    implementation group: 'com.google.guava', name: 'guava', version: '30.1.1-jre'
+    implementation group: 'net.sf.trove4j', name: 'trove4j', version: '3.0.3'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
+    testImplementation "org.mockito.kotlin:mockito-kotlin:3.1.0"
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "11"
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "11"
+}
+
+

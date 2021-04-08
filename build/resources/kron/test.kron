@@ -1,0 +1,22 @@
+//This is an example of how imports will work.
+imp kron.primitives
+
+//This will print out
+fn printGlobalTest<test: String>{
+    print<transformString<test>>
+}
+
+//This will add some numbers to the string and return it
+fn transformString<in: String>{
+    //This will return the input string plus the added string
+    val toAdd = "blah blah blah 123"
+    ret in + toAdd
+}: String
+
+//Create a string that will be passed to the function
+val testString: String = "this is a test"
+
+//Call the print method with our test string
+printGlobalTest<testString>
+
+
