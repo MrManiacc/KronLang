@@ -30,6 +30,14 @@ object NumberResolver : IMatchingResolver {
      * This will get the value as a string or null. For a number this would be 12312.3232 etc.
      */
     override fun evaluate(lexer: Lexer, lengthRead: Int, previous: Token, next: Token): String {
-        return lexer.readRaw(previous.index + 1 until next.index)
+        val start =
+            if (previous != Token.EMPTY)
+                previous.index + 1
+            else 0
+        val stop =
+            if (next != Token.EMPTY)
+                next.index + 1
+            else 0
+        return lexer.readRaw(start until stop);
     }
 }
