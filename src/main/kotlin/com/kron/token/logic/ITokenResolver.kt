@@ -11,5 +11,5 @@ fun interface ITokenResolver {
     /**
      * This should resolve a value for a resolvable token like a string, or number or identifier
      */
-    fun resolve(lexer: Lexer, lengthRead: Int, previous: Token, next: Token): String?
+    fun resolve(lexer: Lexer, lengthRead: Int, previous: Token, next: Token, current: Token): String?
 }

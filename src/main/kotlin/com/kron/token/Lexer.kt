@@ -1,11 +1,10 @@
 package com.kron.token
 
 import com.google.common.primitives.Chars
-import com.kron.exception.KronExceptionType.*
+import com.kron.dsl.*
 import com.kron.exception.KronException
 import com.kron.source.ISourceProvider
 import com.kron.source.SourceData
-import com.kron.utils.warn
 import java.util.*
 
 /**
@@ -57,13 +56,14 @@ class Lexer private constructor() {
      * This will populate the tokens by parsing their type.
      */
     private fun secondPass(removeIf: (Token) -> Boolean) {
+        var lastValidToken: TokenType = TokenType.TokenNone
         this.tokens.forEachIndexed { i, token ->
             val type = token.type
-            if (type != TokenType.TokenNone) {
+            if (token.isValidIndex && !token.isNone) {
                 val read = token.length
                 val prev = if (i == 0) Token.EMPTY else tokens[i - 1]
-                val next = if (i + 1 < tokens.size) tokens[i + 1] else Token.EMPTY.apply { index = size - 1 }
-                val resolved = type.resolver?.resolve(this, read, prev, next)
+                val next = if (i + 1 < tokens.size) tokens[i + 1] else Token.EMPTY.apply { startIndex = size - 1 }
+                val resolved = type.resolver?.resolve(this, read, prev, next, token)
                 if (resolved != null)
                     token.value = resolved
 
@@ -107,7 +107,8 @@ class Lexer private constructor() {
         return try {
             peek(distance)
         } catch (ex: Exception) {
-            warn("${ex.message}")
+            ex.printStackTrace()
+//            warn("${ex.message}")
             null
         }
     }
@@ -117,27 +118,47 @@ class Lexer private constructor() {
      * the index as we're just peeking.
      */
     @Throws(KronException::class) fun peek(distance: Int = 0): Char {
-        val i = (index + distance) - 1
+        val i = (index + distance)
         return contents[i]
     }
 
     /**
      * This will check to see if the given string matches the lexer state
      */
-    fun checkMatch(string: String, start: Int = this.index): Boolean {
-        val stop = start + string.length - 1
-        if (stop >= size) return false
-        val read = readRaw(start until stop)
-        return (string == read)
+    fun isMatch(string: String): Boolean {
+
+        val chars = string.toCharArray()
+        chars.forEachIndexed { i, char ->
+            if (!isCharacter(char, i))
+                return false
+        }
+        return true
     }
 
     /**
-     * This will get the total number of single matches for the given char at the current lexer index.
+     * Checks if the char is present by checking the offset
      */
-    fun countMatchesOf(type: Char, distance: Int = 1): Int {
-        val current = peekSafe(distance)
-        if (current == null || current != type) return distance - 1
-        return countMatchesOf(type, distance + 1)
+    fun hasCharAt(offset: Int): Boolean {
+        return this.index + offset < size
+    }
+
+    /**
+     * Gets the current char with the [offset]
+     */
+    fun charAt(offset: Int = 0): Char {
+        return contents[this.index + offset]
+    }
+
+    /**Check current character**/
+    fun isCharacter(char: Char, offset: Int = 0): Boolean {
+        return contents[index + offset] == char
+    }
+
+    /**
+     * This will eat the current char if it's the given type]
+     */
+    fun eat(type: Char) {
+
     }
 
     /**
@@ -160,6 +181,16 @@ class Lexer private constructor() {
         return buffer.toString()
     }
 
+    /**
+     * This properly reads a give string
+     */
+    fun read(range: IntRange): String {
+        val buffer = StringBuilder()
+        for (i in range)
+            buffer.append(this[i])
+
+        return buffer.toString()
+    }
 
     override fun toString(): String {
         var indent = 0
@@ -170,7 +201,7 @@ class Lexer private constructor() {
                 indent += 3
             if (token.type == TokenType.TokenOpenAngleBracket)
                 indent += 2
-            buffer.append(token.toString(true, indent)).append("\n")
+            buffer.append(token.toString(indent)).append("\n")
             if (token.type == TokenType.TokenCloseBrace)
                 indent -= 3
             if (token.type == TokenType.TokenCloseAngleBracket)
@@ -208,7 +239,7 @@ class Lexer private constructor() {
          * Creates a new lexer of the given CharArray
          */
         fun of(contents: CharArray): Lexer {
-            val lexer = Lexer()
+            val lexer = com.kron.token.Lexer()
             lexer.contents = contents
             return lexer
         }

@@ -29,123 +29,124 @@ enum class TokenType(
     ),
     TokenWhitespace(
         {
-            it.countMatchesOf(' ')
+            if (it.isMatch(" ")) 1 else 0
         }
     ),
     TokenComment(
         matchingResolver = CommentResolver,
     ),
-    TokenOpenParenthesis(
-        {
-            if (it.checkMatch("(")) 1 else 0
-        }),
-    TokenCloseParenthesis(
-        {
-            if (it.checkMatch(")")) 1 else 0
-        }),
     TokenPower(
         {
-            if (it.checkMatch("^")) 1 else 0
+            if (it.isMatch("^")) 1 else 0
         }),
     TokenMultiply(
         {
-            if (it.checkMatch("*")) 1 else 0
+            if (it.isMatch("*")) 1 else 0
         }),
     TokenDivide(
         {
-            if (it.checkMatch("/")) 1 else 0
+            if (it.isMatch("/")) 1 else 0
         }),
     TokenPlus(
         {
-            if (it.checkMatch("+")) 1 else 0
+            if (it.isMatch("+")) 1 else 0
         }),
     TokenMinus(
         {
-            if (it.checkMatch("-")) 1 else 0
+            if (it.isMatch("-")) 1 else 0
         }),
     TokenEquals(
         {
-            if (it.checkMatch("=")) 1 else 0
+            if (it.isMatch("=")) 1 else 0
         }),
-    TokenEquality(
+    TokenOpenParenthesis(
         {
-            if (it.checkMatch("==")) 2 else 0
+            if (it.isMatch("(")) 1 else 0
         }),
-    TokenNewLine(
+    TokenCloseParenthesis(
         {
-            if (it.checkMatch("\n")) 1 else 0
-        }),
-    TokenModule(
-        {
-            if (it.checkMatch("module")) "module".length else 0
-        }),
-    TokenClass(
-        {
-            if (it.checkMatch("class")) "class".length else 0
-        }),
-    TokenInterface(
-        {
-            if (it.checkMatch("inter")) "inter".length else 0
-        }),
-    TokenNative(
-        {
-            if (it.checkMatch("extern")) "extern".length else 0
-        }),
-    TokenAnnotation(
-        {
-            if (it.checkMatch("@")) 1 else 0
-        }),
-    TokenOperatorOverload(
-        {
-            if (it.checkMatch("operator")) "operator".length else 0
-        }),
-    TokenOverride(
-        {
-            if (it.checkMatch("override")) "override".length else 0
-        }),
-    TokenSuper(
-        {
-            if (it.checkMatch("~")) 1 else 0
+            if (it.isMatch(")")) 1 else 0
         }),
     TokenVal(
         {
-            if (it.checkMatch("val")) 3 else 0
+            if (it.isMatch("val")) 3 else 0
         }),
     TokenVar(
         {
-            if (it.checkMatch("var")) 3 else 0
+            if (it.isMatch("var")) 3 else 0
         }),
+    TokenEquality(
+        {
+            if (it.isMatch("==")) 2 else 0
+        }),
+    TokenNewLine(
+        {
+            if (it.isMatch("\n")) 1 else 0
+        }),
+    TokenModule(
+        {
+            if (it.isMatch("module")) "module".length else 0
+        }),
+    TokenClass(
+        {
+            if (it.isMatch("class")) "class".length else 0
+        }),
+    TokenInterface(
+        {
+            if (it.isMatch("inter")) "inter".length else 0
+        }),
+    TokenNative(
+        {
+            if (it.isMatch("extern")) "extern".length else 0
+        }),
+    TokenAnnotation(
+        {
+            if (it.isMatch("@")) 1 else 0
+        }),
+    TokenOperatorOverload(
+        {
+            if (it.isMatch("operator")) "operator".length else 0
+        }),
+    TokenOverride(
+        {
+            if (it.isMatch("override")) "override".length else 0
+        }),
+    TokenSuper(
+        {
+            if (it.isMatch("~")) 1 else 0
+        }),
+
     TokenOpenAngleBracket(
         {
-            if (it.checkMatch("<")) 1 else 0
+            if (it.isMatch("<")) 1 else 0
         }),
     TokenCloseAngleBracket(
         {
-            if (it.checkMatch(">")) 1 else 0
+            if (it.isMatch(">")) 1 else 0
         }),
     TokenOpenBrace(
         {
-            if (it.checkMatch("{")) 1 else 0
+            if (it.isMatch("{")) 1 else 0
         }),
     TokenCloseBrace(
         {
-            if (it.checkMatch("}")) 1 else 0
+            if (it.isMatch("}")) 1 else 0
         }),
     TokenFunction(
         {
-            if (it.checkMatch("fn")) 2 else 0
+            if (it.isMatch("fn")) 2 else 0
         }),
     TokenColon(
         {
-            if (it.checkMatch(":")) 1 else 0
+            if (it.isMatch(":")) 1 else 0
         }),
     TokenSemicolon(
         {
-            if (it.checkMatch(";")) 1 else 0
+            if (it.isMatch(";")) 1 else 0
         }),
     TokenComma(
         {
-            if (it.checkMatch(",")) 1 else 0
+            if (it.isMatch(",")) 1 else 0
         }),
     TokenString(
         matchingResolver = StringResolver

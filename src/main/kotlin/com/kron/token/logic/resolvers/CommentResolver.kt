@@ -22,7 +22,7 @@ object CommentResolver : IMatchingResolver {
     }
 
     private fun getMultiComment(lexer: Lexer): Int {
-        if (lexer.checkMatch("/*")) {
+        if (lexer.isMatch("/*")) {
             val stop = lexer.nextIndexOf("*/", lexer.index + 2) + 2
             return max(stop - lexer.index, 0)
         }
@@ -30,7 +30,7 @@ object CommentResolver : IMatchingResolver {
     }
 
     private fun getSingleComment(lexer: Lexer): Int {
-        if (lexer.checkMatch("//")) {
+        if (lexer.isMatch("//")) {
             val stop = lexer.nextIndexOf("\n", lexer.index + 2) + 1
             return max(stop - lexer.index, 0)
         }
@@ -40,8 +40,8 @@ object CommentResolver : IMatchingResolver {
     /**
      * This will get the value as a string or null. For a number this would be 12312.3232 etc.
      */
-    override fun evaluate(lexer: Lexer, lengthRead: Int, previous: Token, next: Token): String {
-        return lexer.readRaw(previous.index until next.index).trim().replace("\n", "")
+    override fun evaluate(lexer: Lexer, lengthRead: Int, previous: Token, next: Token, current: Token): String {
+        return lexer.readRaw(previous.startIndex until next.startIndex).trim().replace("\n", "")
     }
 
 }

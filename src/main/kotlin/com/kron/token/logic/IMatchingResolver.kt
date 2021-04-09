@@ -1,5 +1,6 @@
 package com.kron.token.logic
 
+import com.kron.dsl.range
 import com.kron.token.Lexer
 import com.kron.token.Token
 
@@ -23,7 +24,7 @@ interface IMatchingResolver {
     /**
      * This will get the value as a string or null. For a number this would be 12312.3232 etc.
      */
-    fun evaluate(lexer: Lexer, lengthRead: Int, previous: Token, next: Token): String? {
-        return null
+    fun evaluate(lexer: Lexer, lengthRead: Int, previous: Token, next: Token, current: Token): String? {
+        return lexer.read(current.range)
     }
 }
