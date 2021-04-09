@@ -27,13 +27,7 @@ class Lexer private constructor() {
     var index = 0
         private set
 
-    /**The size of the lexer. will throw []**/
-    val size: Int
-        @Throws(KronException::class) get() = contents.size
 
-    /**Gets the lexer as a string**/
-    val source: String
-        @Throws(KronException::class) get() = contents.contentToString()
 
     /**
      * This will actually create each of the tokens.

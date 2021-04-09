@@ -83,39 +83,54 @@ enum class TokenType(
         {
             if (it.isMatch("\n")) 1 else 0
         }),
-    TokenModule(
+    TokenPublic( //This can be used from anywhere
         {
-            if (it.isMatch("module")) "module".length else 0
+            if (it.isMatch("public")) "public".length else if (it.isMatch("pub")) "pub".length else 0
+        }),
+    TokenPrivate( //This can only be used from inside the current context
+        {
+            if (it.isMatch("private")) "private".length else if (it.isMatch("priv")) "priv".length else 0
+        }),
+    TokenModule( //Anyone in the current module context can use this token
+        {
+            if (it.isMatch("module")) "module".length else if (it.isMatch("mod")) "mod".length else 0
+        }),
+    TokenFile( //Anyone in the current file can use  the given expression
+        {
+            if (it.isMatch("file")) "file".length else if (it.isMatch("fl")) "fl".length else 0
         }),
     TokenClass(
         {
-            if (it.isMatch("class")) "class".length else 0
+            if (it.isMatch("class")) "class".length else if (it.isMatch("cls")) "cls".length else 0
         }),
     TokenInterface(
         {
-            if (it.isMatch("inter")) "inter".length else 0
+            if (it.isMatch("interface")) "interface".length else if (it.isMatch("inter")) "inter".length else 0
         }),
     TokenNative(
         {
-            if (it.isMatch("extern")) "extern".length else 0
-        }),
-    TokenAnnotation(
-        {
-            if (it.isMatch("@")) 1 else 0
-        }),
-    TokenOperatorOverload(
-        {
-            if (it.isMatch("operator")) "operator".length else 0
+            if (it.isMatch("external")) "external".length else if (it.isMatch("extern")) "extern".length else 0
         }),
     TokenOverride(
         {
-            if (it.isMatch("override")) "override".length else 0
+            if (it.isMatch("override")) "override".length else if (it.isMatch("ovr")) "ovr".length else 0
+        }),
+    TokenOperatorOverload(
+        {
+            if (it.isMatch("operator")) "operator".length else if (it.isMatch("op")) "op".length else 0
+        }),
+    TokenAnnotation(
+        {
+            if (it.isMatch("annotation")) "annotation".length else if (it.isMatch("ann")) "ann".length else 0
         }),
     TokenSuper(
         {
-            if (it.isMatch("~")) 1 else 0
+            if (it.isMatch("super")) "super".length else if (it.isMatch("su")) "su".length else 0
         }),
-
+    TokenFunction(
+        {
+            if (it.isMatch("function")) "function".length else if (it.isMatch("fn")) "fn".length else 0
+        }),
     TokenOpenAngleBracket(
         {
             if (it.isMatch("<")) 1 else 0
@@ -132,10 +147,7 @@ enum class TokenType(
         {
             if (it.isMatch("}")) 1 else 0
         }),
-    TokenFunction(
-        {
-            if (it.isMatch("fn")) 2 else 0
-        }),
+
     TokenColon(
         {
             if (it.isMatch(":")) 1 else 0
@@ -212,7 +224,7 @@ enum class TokenType(
          */
         private fun sortTokens(unsorted: Array<TokenType>): Array<TokenType> {
             val types = arrayListOf<TokenType>()
-                .apply { addAll(unsorted) }//Copy the unsorted array initially
+                .apply { addAll(unsorted) } //Copy the unsorted array initially
             Collections.sort(types, this::compareTokens)
             return Array(types.size) { types[it] }
         }

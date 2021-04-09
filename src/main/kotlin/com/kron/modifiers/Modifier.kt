@@ -4,6 +4,9 @@ package com.kron.modifiers
  * This is used to keep track of the visibility of nodes
  */
 enum class Modifier {
+    /**======Internal use======**/
+    NoModifiers,
+
     /**======Scope======**/
     GlobalScope,
     FileScope, //Basically static
@@ -13,12 +16,14 @@ enum class Modifier {
 
     /**======Access level======**/
     PrivateAccess, //Can only be accessed by current scope
-    ProtectedAccess,
     PublicAccess,
-    FileOnlyAccess,
-    ModuleOnlyAccess,
+    FileOnlyAccess, //Can be access by all modules in file
+    ModuleOnlyAccess, //Can be accessed by anything that has a reference to given module
+    NativeAccess, //The function is written in kotlin, and be can be accessed natively
 
     /**======Misc flags======**/
+    OperatorOverrideFlag,
+    OverrideFlag,
     ImmutableFlag,
     MutableFlag,
     NullableFlag,
@@ -34,4 +39,11 @@ enum class Modifier {
 
     /**This will build with the given modifier type**/
     infix fun build(other: Modifier): Modifiers = ModifierBuilder(this.modifier) build other
+
+    /**Creates a new builder**/
+    fun builder(): ModifierBuilder = ModifierBuilder(this.modifier)
+
+    /**Creates a new modifier builder**/
+    val builder: ModifierBuilder get() = builder()
+
 }

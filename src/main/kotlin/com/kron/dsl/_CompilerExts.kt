@@ -7,15 +7,31 @@
 package com.kron.dsl
 
 import com.google.common.collect.Maps
+import com.kron.exception.*
+import com.kron.exception.KronException
+import com.kron.modifiers.*
+import com.kron.modifiers.Modifier.*
 import com.kron.parse.structure.operands.NoOp
 import com.kron.parse.structure.operands.Operation
 import com.kron.parse.structure.visitor.IVisitor
-import com.kron.token.Token
-import com.kron.token.TokenType
 import com.kron.token.TokenType.*
 import com.kron.parse.structure.visitor.VisitorType
-import com.kron.parse.structure.visitor.visitors.Visitors
+import com.kron.parse.structure.visitor.Visitors
+import com.kron.token.*
 import kotlin.reflect.KClass
+
+/**====================================== [Lexer]  helpers====================================== */
+
+/**Creates a nicely formatted string for the tokenString**/
+val Lexer.tokensString: String get() = tokens.joinToString("", prefix = "", postfix = "") { "\n\t\t$it," }
+
+/**The size of the lexer. will throw []**/
+val Lexer.size: Int
+    @Throws(KronException::class) get() = contents.size
+
+/**Gets the lexer as a string**/
+val Lexer.source: String
+    @Throws(KronException::class) get() = contents.contentToString()
 
 /**====================================== [TokenType] enum helpers====================================== */
 
@@ -35,6 +51,34 @@ val TokenType.defaultToken: Token get() = if (isBinary) Token.binTokenFor(this) 
 
 /**====================================== [Token] and [Token.Companion] ====================================== */
 
+/**Allows for separation of  statements using either a new line or semi colon**/
+val Token.isStatementSeparator: Boolean get() = this.type == TokenNewLine || this.type == TokenSemicolon
+
+/**true if the given token is a modifier**/
+val Token.isModifier: Boolean
+    get() = when (this.type) {
+        TokenPublic, TokenPrivate, TokenModule,
+        TokenFile, TokenNative,
+        TokenOverride, TokenOperatorOverload
+        -> true
+        else -> false
+    }
+
+/**Gets the modifiers fof the given token**/
+val Token.modifier: Modifier
+    get() = if (!isModifier)
+        NoModifiers
+    else when (this.type) {
+        TokenPublic -> PublicAccess
+        TokenPrivate -> PrivateAccess
+        TokenModule -> ModuleOnlyAccess
+        TokenFile -> FileOnlyAccess
+        TokenNative -> NativeAccess
+        TokenOverride -> OverrideFlag
+        TokenOperatorOverload -> OperatorOverrideFlag
+        else -> NoModifiers
+    }
+
 /**The ending location**/
 val Token.endIndex: Int get() = startIndex + length - 1
 
@@ -46,7 +90,7 @@ val Token.isValidIndex: Boolean
 val Token.isNone: Boolean get() = this.type == TokenNone
 
 /**This will essentially check to make sure **/
-val Token.isEmpty: Boolean get() = this == Token.EMPTY || isNone || (!isValidIndex && !isValuePresent)
+val Token.isEmpty: Boolean get() = this == Token.EMPTY || this.type == TokenWhitespace || isNone || (!isValidIndex && !isValuePresent)
 
 /**This will essentially check to make sure **/
 val Token.isNotEmpty: Boolean get() = !isEmpty

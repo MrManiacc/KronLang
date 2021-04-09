@@ -34,11 +34,18 @@ class RuleSet private constructor(
     infix fun has(rule: RuleType): Boolean = rules.containsKey(rule)
 
     /**Tried to get the given rule or throws an error**/
-    operator fun get(rule: RuleType): IRule = rules[rule] ?: error("Tried to access invalid rule for ruleset ${toString()}")
+    operator fun get(rule: RuleType): IRule = rules[rule] ?: error("${rule.name} Tried to access invalid rule for ruleset ${toString()}")
 
     /** This will attempt to call the given rule, returns [NoOp] if invalid **/
     fun call(rule: RuleType): Operation {
         return get(rule).parse(parserIn ?: return NoOp(), this)
+    }
+
+    /** This will attempt to call the given rule, returns [NoOp] if invalid **/
+    inline fun <reified T : Operation> callExpecting(rule: RuleType, throwErrorOnFail: Boolean = true): T? {
+        val result = call(rule)
+        if (result !is T && throwErrorOnFail) error("Attempted to cast operation $result to type ${T::class.simpleName}")
+        return result as T
     }
 
     /**For debugging**/
@@ -92,10 +99,13 @@ class RuleSet private constructor(
         /**
          * This will buidl the rule set
          */
-        fun build(): RuleSet {
+        fun build(parserIn: Parser? = null): RuleSet {
+            if (parserIn != null && this.parser == null) this.parser = parserIn
             val rules = this.ruleList.associate { Pair(it.first, it.first.rule) }
             val order = this.ruleList.sortedBy { it.second }.map { it.first }.toTypedArray()
-            return RuleSet(rules, order, name, parser)
+            val ruleset = RuleSet(rules, order, name, parser)
+            println("built new ruleset $ruleset")
+            return ruleset
         }
     }
 

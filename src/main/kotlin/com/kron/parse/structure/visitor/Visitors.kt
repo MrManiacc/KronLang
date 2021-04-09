@@ -1,4 +1,4 @@
-package com.kron.parse.structure.visitor.visitors
+package com.kron.parse.structure.visitor
 
 import com.kron.dsl.*
 import com.kron.parse.structure.operands.*
@@ -41,6 +41,12 @@ internal object Visitors {
     internal fun number(it: Operation): Any =
         if (it !is NumberOp) noOperation
         else it.number
+
+    /**This will initialize the variables**/
+    internal fun variable(it: Operation): Any {
+        if (it !is VariableOp) return noOperation
+        return TODO("visit the variable")
+    }
 
 
 }

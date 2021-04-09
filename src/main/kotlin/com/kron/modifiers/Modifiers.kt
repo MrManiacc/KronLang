@@ -26,16 +26,12 @@ class Modifiers(private val mods: Int) {
      */
     override fun toString(): String {
         val current = this.values
-        val builder = StringBuilder("Modifiers")
+        val builder = StringBuilder()
             .append("(")
-            .append("Mods")
-            .append("=")
-            .append(mods)
-            .append(", ")
         current.forEachIndexed { i, value ->
             builder.append(value.name)
                 .append("=")
-                .append(value.modifier)
+                .append(if(value.modifier == 1) "true" else false)
             if (i != current.size - 1)
                 builder.append(", ")
 

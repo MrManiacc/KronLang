@@ -1,9 +1,7 @@
 package com.kron.parse.structure.visitor
 
-import com.kron.parse.structure.operands.NumberOp
-import com.kron.parse.structure.operands.Operation
+import com.kron.parse.structure.operands.*
 import com.kron.parse.structure.operators.*
-import com.kron.parse.structure.visitor.visitors.Visitors
 import kotlin.reflect.KClass
 
 /**
@@ -15,5 +13,5 @@ enum class VisitorType(val forOp: KClass<out Operation>, val visitor: IVisitor) 
     BinaryOpVisitor(BinaryOp::class, Visitors::binary),
     NumberOpVisitor(NumberOp::class, Visitors::number),
     UnaryOpVisitor(UnaryOp::class, Visitors::unary),
-
+    VariableVisitor(VariableOp::class, Visitors::unary),
 }
