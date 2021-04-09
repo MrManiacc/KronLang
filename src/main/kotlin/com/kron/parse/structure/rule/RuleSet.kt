@@ -34,7 +34,8 @@ class RuleSet private constructor(
     infix fun has(rule: RuleType): Boolean = rules.containsKey(rule)
 
     /**Tried to get the given rule or throws an error**/
-    operator fun get(rule: RuleType): IRule = rules[rule] ?: error("${rule.name} Tried to access invalid rule for ruleset ${toString()}")
+    operator fun get(rule: RuleType): IRule =
+        rules[rule] ?: error("tried to call unregistered rule ${rule.name} for ruleset $name")
 
     /** This will attempt to call the given rule, returns [NoOp] if invalid **/
     fun call(rule: RuleType): Operation {

@@ -13,7 +13,7 @@ import com.kron.token.TokenType.*
 /**
  * This object stores references to all of the different types of rules.
  */
-object Rules {
+object Grammar {
 
     /**
      *  expr   : term ((PLUS | MINUS) term)
@@ -128,7 +128,7 @@ object Rules {
             parser.eat(TokenOpenBrace)
             rules.call(Compound)
         } else if (parser.current?.type == TokenVal || parser.current?.type == TokenIdentifier) {
-            rules.call(Assigment)
+            rules.call(Assignment)
         } else NoOp("Failed to find compound statement or assignment.")
     }
 
@@ -170,7 +170,8 @@ object Rules {
             parser.eat(TokenIdentifier)
         }
         if (nameId == null) return NoOp("Failed to  find name identifier for variable declaration")
-        return VariableOp(nameId, modifiers, typeId?.value)
+        return VarOp(nameId)
+//        return VarOp(nameId, modifiers, typeId?.value)
     }
 
     /**This will create a a new modifiers builder and populate it if possible**/

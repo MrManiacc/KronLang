@@ -13,5 +13,5 @@ enum class VisitorType(val forOp: KClass<out Operation>, val visitor: IVisitor) 
     BinaryOpVisitor(BinaryOp::class, Visitors::binary),
     NumberOpVisitor(NumberOp::class, Visitors::number),
     UnaryOpVisitor(UnaryOp::class, Visitors::unary),
-    VariableVisitor(VariableOp::class, Visitors::unary),
+    VariableVisitor(VarOp::class, Visitors::unary),
 }

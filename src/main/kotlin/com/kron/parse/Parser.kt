@@ -22,7 +22,7 @@ class Parser(
             with Compound
             with Statement
             with StatementList
-            with Assigment
+            with Assignment
             with Expression
             with Term
             with Variable
@@ -69,7 +69,7 @@ class Parser(
         get() = try {
             tokens.peek()
         } catch (ex: Exception) {
-                        println("Peeked invalid token ${ex.message}")
+//                        println("Peeked invalid token ${ex.message}")
 //            ex.printStackTrace()
             null
         }

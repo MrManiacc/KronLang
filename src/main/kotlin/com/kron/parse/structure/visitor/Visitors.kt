@@ -44,7 +44,7 @@ internal object Visitors {
 
     /**This will initialize the variables**/
     internal fun variable(it: Operation): Any {
-        if (it !is VariableOp) return noOperation
+        if (it !is VarOp) return noOperation
         return TODO("visit the variable")
     }
 
